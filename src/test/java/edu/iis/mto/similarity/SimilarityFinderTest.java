@@ -14,8 +14,7 @@ class SimilarityFinderTest {
     SimilarityFinder finderFalse;
 
     @BeforeEach
-    public void createFinders()
-    {
+    public void createFinders() {
         finderTrue = new SimilarityFinder(((elem, sequence) -> SearchResult.builder().withFound(true).build()));
         finderFalse = new SimilarityFinder(((elem, sequence) -> SearchResult.builder().withFound(false).build()));
     }
@@ -37,7 +36,7 @@ class SimilarityFinderTest {
     }
 
     @Test
-    public void shouldReturnOneWhenBothSequencesHaveEqualLengthsAndHaveSameElements(){
+    public void shouldReturnOneWhenBothSequencesHaveEqualLengthsAndHaveSameElements() {
         int[] seq1 = {4, 5};
         int[] seq2 = {4, 5};
 
@@ -55,5 +54,24 @@ class SimilarityFinderTest {
         assertEquals(0, result);
     }
 
+    @Test
+    public void shouldReturnZeroWhenFirstSequenceIsEmpty() {
+        int[] seq1 = {};
+        int[] seq2 = {1, 2, 3};
+
+        double result = finderFalse.calculateJackardSimilarity(seq1, seq2);
+
+        assertEquals(0, result);
+    }
+
+    @Test
+    public void shouldReturnZeroWhenSecondSequenceIsEmpty() {
+        int[] seq1 = {3, 6};
+        int[] seq2 = {};
+
+        double result = finderFalse.calculateJackardSimilarity(seq1, seq2);
+
+        assertEquals(0, result);
+    }
 
 }
