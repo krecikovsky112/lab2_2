@@ -114,12 +114,9 @@ class SimilarityFinderTest {
         int[] seq2 = {3, 4, 5, 6};
         final int[] invokeCounter = {0};
 
-        SequenceSearcher searcherMock = new SequenceSearcher() {
-            @Override
-            public SearchResult search(int elem, int[] sequence) {
-                invokeCounter[0]++;
-                return found;
-            }
+        SequenceSearcher searcherMock = (elem, sequence) -> {
+            invokeCounter[0]++;
+            return found;
         };
 
         SimilarityFinder finder = new SimilarityFinder(searcherMock);
@@ -133,12 +130,9 @@ class SimilarityFinderTest {
         int[] seq2 = {};
         final int[] invokeCounter = {0};
 
-        SequenceSearcher searcherMock = new SequenceSearcher() {
-            @Override
-            public SearchResult search(int elem, int[] sequence) {
-                invokeCounter[0]++;
-                return null;
-            }
+        SequenceSearcher searcherMock = (elem, sequence) -> {
+            invokeCounter[0]++;
+            return null;
         };
 
         SimilarityFinder finder = new SimilarityFinder(searcherMock);
@@ -152,15 +146,12 @@ class SimilarityFinderTest {
         int[] seq2 = {1, 2, 3, 4, 5};
         final int[] foundCounter = {0};
 
-        SequenceSearcher searcherMock = new SequenceSearcher() {
-            @Override
-            public SearchResult search(int elem, int[] sequence) {
-                if (elem == 1 || elem == 2) {
-                    foundCounter[0]++;
-                    return found;
-                }
-                return notFound;
+        SequenceSearcher searcherMock = (elem, sequence) -> {
+            if (elem == 1 || elem == 2) {
+                foundCounter[0]++;
+                return found;
             }
+            return notFound;
         };
 
         SimilarityFinder finder = new SimilarityFinder(searcherMock);
