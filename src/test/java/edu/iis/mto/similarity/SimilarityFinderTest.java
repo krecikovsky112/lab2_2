@@ -145,4 +145,26 @@ class SimilarityFinderTest {
         finder.calculateJackardSimilarity(seq1, seq2);
         assertEquals(0, invokeCounter[0]);
     }
+
+    @Test
+    public void shouldFindTwoElementFromFirstSequenceInSecondSequence() throws NoSuchFieldException, IllegalAccessException {
+        int[] seq1 = {1, 2};
+        int[] seq2 = {1, 2, 3, 4, 5};
+        final int[] foundCounter = {0};
+
+        SequenceSearcher searcherMock = new SequenceSearcher() {
+            @Override
+            public SearchResult search(int elem, int[] sequence) {
+                if (elem == 1 || elem == 2) {
+                    foundCounter[0]++;
+                    return found;
+                }
+                return notFound;
+            }
+        };
+
+        SimilarityFinder finder = new SimilarityFinder(searcherMock);
+        finder.calculateJackardSimilarity(seq1, seq2);
+        assertEquals(2, foundCounter[0]);
+    }
 }
