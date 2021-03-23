@@ -12,11 +12,19 @@ class SimilarityFinderTest {
 
     SimilarityFinder finderTrue;
     SimilarityFinder finderFalse;
+    SearchResult found;
+    SearchResult notFound;
 
     @BeforeEach
     public void createFinders() {
         finderTrue = new SimilarityFinder(((elem, sequence) -> SearchResult.builder().withFound(true).build()));
         finderFalse = new SimilarityFinder(((elem, sequence) -> SearchResult.builder().withFound(false).build()));
+    }
+
+    @BeforeEach
+    public void foundOrNotFound() {
+        found = SearchResult.builder().withFound(true).build();
+        notFound = SearchResult.builder().withFound(false).build();
     }
 
     @Test
@@ -71,8 +79,6 @@ class SimilarityFinderTest {
     public void shouldReturnQuarterWhenSequencesHaveTwoTheSameElementsAndTotalLengthIsTen() {
         int[] seq1 = {5, 6, 7, 8};
         int[] seq2 = {1, 2, 3, 4, 5, 6};
-        SearchResult found = SearchResult.builder().withFound(true).build();
-        SearchResult notFound = SearchResult.builder().withFound(false).build();
 
         SimilarityFinder finder = new SimilarityFinder((elem, sequence) -> {
             if (elem == 5) return found;
@@ -90,7 +96,6 @@ class SimilarityFinderTest {
     public void shouldReturnHalfWhenSequencesHaveThreeTheSameElementsAndTotalLengthIsNine() {
         int[] seq1 = {3, 4, 5};
         int[] seq2 = {1, 2, 3, 4, 5, 6};
-        SearchResult found = SearchResult.builder().withFound(true).build();
 
         SimilarityFinder finder = new SimilarityFinder((elem, sequence) -> {
             if (elem == 3) return found;
@@ -102,4 +107,25 @@ class SimilarityFinderTest {
         double result = finder.calculateJackardSimilarity(seq1, seq2);
         assertEquals(0.5d, result);
     }
+
+    @Test
+    public void shouldInvokeFourTimesSearchMethod() {
+        int[] seq1 = {3, 4, 5, 6};
+        int[] seq2 = {3, 4, 5, 6};
+        final int[] invokeCounter = {0};
+
+        SequenceSearcher searcherMock = new SequenceSearcher() {
+            @Override
+            public SearchResult search(int elem, int[] sequence) {
+                invokeCounter[0]++;
+                return found;
+            }
+        };
+
+        SimilarityFinder finder = new SimilarityFinder(searcherMock);
+        finder.calculateJackardSimilarity(seq1, seq2);
+        assertEquals(4, invokeCounter[0]);
+    }
+
+    
 }
