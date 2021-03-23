@@ -147,7 +147,7 @@ class SimilarityFinderTest {
     }
 
     @Test
-    public void shouldFindTwoElementFromFirstSequenceInSecondSequence() throws NoSuchFieldException, IllegalAccessException {
+    public void shouldFindTwoElementFromFirstSequenceInSecondSequence(){
         int[] seq1 = {1, 2};
         int[] seq2 = {1, 2, 3, 4, 5};
         final int[] foundCounter = {0};
